@@ -147,7 +147,7 @@ more_than_2_rts = db_cursor.fetchall()
 rt_command = "SELECT tweet_text FROM Tweets WHERE tweet_text LIKE 'RT%'"
 db_cursor.execute(rt_command)
 
-first_rt = cur.fetchone()[0]
+first_rt = db_cursor.fetchone()[0]
 # print(first_rt) 
 
 # Finally, done with database stuff for a bit: write a line of code to close the cursor to the database.
@@ -168,7 +168,9 @@ db_connection.close()
 
 # If you want to challenge yourself here -- this function definition (what goes under the def statement) CAN be written in one line! Definitely, definitely fine to write it with multiple lines, too, which will be much easier and clearer.
 
-
+def get_twitter_users(to_check):
+#	users_list = re.findall(r'@[A-z0-9_]*', to_check)
+	return set(user.strip("@") for user in re.findall(r'@[A-z0-9_]+', to_check))
 
 
 
