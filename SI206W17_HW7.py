@@ -108,13 +108,8 @@ umsi_tweets = get_user_tweets("umsi")
 
 insert_statement = "INSERT INTO Tweets VALUES (?, ?, ?, ?, ?)"
 for tweet in umsi_tweets:
-	tweet_id = tweet["id"]
-	tweet_author = tweet["user"]["screen_name"]
-	tweet_timestamp = tweet["created_at"]
-	tweet_content = tweet["text"]
-	tweet_retweets = ["retweet_count"]
 
-	full_tweet = (tweet_id, tweet_author, tweet_timestamp, tweet_content, tweet_retweets)
+	full_tweet = (tweet["id"], tweet["user"]["screen_name"], tweet["created_at"], tweet["text"], tweet["retweet_count"])
 	db_cursor.execute(insert_statement, full_tweet)
 
 # Use the database connection to commit the changes to the database
@@ -133,18 +128,31 @@ db_connection.commit()
 
 # Select from the database all of the TIMES the tweets you collected were posted and fetch all the tuples that contain them in to the variable tweet_posted_times.
 
+time_command = "SELECT time_posted FROM Tweets"
+db_cursor.execute(time_command)
+
+tweet_posted_times = db_cursor.fetchall()
+# print(tweet_posted_times)
 
 # Select all of the tweets (the full rows/tuples of information) that have been retweeted MORE than 2 times, and fetch them into the variable more_than_2_rts.
 
+rt2_command = "SELECT * FROM Tweets WHERE retweets > 2"
+db_cursor.execute(rt2_command)
 
+more_than_2_rts = db_cursor.fetchall()
+# print(more_than_2_rts)
 
 # Select all of the TEXT values of the tweets that are retweets of another account (i.e. have "RT" at the beginning of the tweet text). Save the FIRST ONE from that group of text values in the variable first_rt. Note that first_rt should contain a single string value, not a tuple.
 
+rt_command = "SELECT tweet_text FROM Tweets WHERE tweet_text LIKE 'RT%'"
+db_cursor.execute(rt_command)
 
+first_rt = cur.fetchone()[0]
+# print(first_rt) 
 
 # Finally, done with database stuff for a bit: write a line of code to close the cursor to the database.
 
-
+db_connection.close()
 
 ## [PART 3] - Processing data
 
